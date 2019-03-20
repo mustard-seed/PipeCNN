@@ -24,8 +24,9 @@ function(add_hw_emulation_target)
 
     list (APPEND occflags ${add_hw_emulation_target_SOURCES_LIST})
     
-    add_custom_target(${target_name_local}
+    add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
+        DEPENDS add_hw_emulation_target_SOURCES_LIST
     )
     
 endfunction()
@@ -55,8 +56,9 @@ function(add_hw_report_target)
 
     list (APPEND occflags ${add_hw_report_target_SOURCES_LIST})
     
-    add_custom_target(${target_name_local}
+    add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
+        DEPENDS add_hw_report_target_SOURCES_LIST
     )
     
 endfunction()
@@ -86,8 +88,9 @@ function(add_hw_profile_target)
 
     list (APPEND occflags ${add_hw_profile_target_SOURCES_LIST})
     
-    add_custom_target(${target_name_local}
+    add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
+        DEPENDS add_hw_profile_target_SOURCES_LIST
     )
     
 endfunction()
@@ -117,8 +120,9 @@ function(add_hw_release_target)
 
     list (APPEND occflags ${add_hw_release_target_SOURCES_LIST})
     
-    add_custom_target(${target_name_local}
+    add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
+        DEPENDS add_hw_release_target_SOURCES_LIST
     )
     
 endfunction()

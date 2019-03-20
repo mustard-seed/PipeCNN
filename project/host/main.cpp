@@ -78,7 +78,7 @@ const char *mean_data_file_path    = "./data/imagenet/mean_data.dat";
 const char *synset_word_file_path  = "./data/imagenet/synset_words.txt";
 const char *LabelPath              = "./data/imagenet/val.txt";
 char  picture_file_path_head[100]  = "/home/dwang/Work/imagenet/ilsvrc2012/ILSVRC2012_img_val/ILSVRC2012_val_";
-char  picture_file_path[100];
+char  picture_file_path[100] = "./data/cat.jpg";
 int   label[MAX_PIC_NUM]={0};
 char  label_buf[MAX_PIC_NUM][1024]={0};
 char  synset_buf[1000][1024]={0};
@@ -1608,15 +1608,15 @@ void verifyResult(int num)
 	substr = &synset_buf[max_label][10];
 
 	Mat img = imread(picture_file_path);
-	putText(img,substr,Point(20, 50), CV_FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 0), 2, 8);
+    putText(img,substr,Point(20, 50), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 0), 2, 8);
 	if(max_label == label[num-1]){
-		putText(img,"True",Point(20, 80), CV_FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 255, 0), 2, 8);
+        putText(img,"True",Point(20, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 255, 0), 2, 8);
 	} else {
-		putText(img,"False",Point(20, 80), CV_FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 2, 8);
+        putText(img,"False",Point(20, 80), FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 2, 8);
 		printf("False: True_label = %d Inferred_label = %d\n\n", label[num], max_label);
 	}
 	imshow( "PipeCNN", img);
-	cvMoveWindow("PipeCNN",0,0);//set the window's position
+    moveWindow("PipeCNN",0,0);//set the window's position
 	waitKey(600);
 #else
 	// Validate the results
@@ -1656,12 +1656,14 @@ void loadImageToBuffer(int num)
 #ifdef USE_OPENCV
 	// load image from picture files
 	// get the correct paths for each pictures
-	char end[14]="00000000.JPEG";//endof the char[] '\0'
+    /* Removed by James Liu
+    char end[14]="00000000.JPEG";//endof the char[] '\0'
 	char head[100];
 	numtochar(num,end);
 	memset(picture_file_path,0x00,sizeof(char)*100);
 	strcpy(head,picture_file_path_head);
 	strcpy(picture_file_path,strcat(head,end));
+    */
 
 	if(load_picture(image)==1)
 		printf("Error: loading image data from real pictures failed !!!\n");

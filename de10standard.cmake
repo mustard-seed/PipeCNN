@@ -9,7 +9,7 @@ SET(CMAKE_C_COMPILER   arm-linux-gnueabihf-gcc)
 SET(CMAKE_CXX_COMPILER arm-linux-gnueabihf-g++)
 
 # where is the target environment
-#SET(CMAKE_FIND_ROOT_PATH  /home/jamesliu/intelFPGA/18.0/embedded/ds-5/sw/gcc)
+SET(CMAKE_FIND_ROOT_PATH  /home/jamesliu/intelFPGA/18.0/embedded/ds-5/sw/gcc/arm-linux-gnueabihf)
 
 # search for programs in the build host directories
 SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)

@@ -454,6 +454,7 @@ void coreConv(
 
 		bias_ch_out = read_channel_intel(bias_ch);
 
+        // Initialize all shift-registers to 0.
 		#pragma unroll
 		for(unsigned char ll=0; ll<LANE_NUM; ll++){
 
@@ -473,6 +474,7 @@ void coreConv(
 			mac_data = read_channel_intel(data_ch);
 			mac_weight = read_channel_intel(weight_ch);
 
+            // LANE_NUM is in fact the number of CUs
 			// add results from all lanes
 			// accumulate with the last copy
 			#pragma unroll
@@ -713,7 +715,7 @@ void maxPool(
 	DPTYPE  pool_final[2][POOL_GP_SIZE_X][LANE_NUM]; // final pooling reslut
 
 	// init hierarchy counters
-	pool_y_cnt = 0;
+    pool_y_cnt = 0;
 	pool_group_cnt = 0;
 	//#pragma ivdep array(pool_final)
 	for(ushort i = 0; i < pool_times; i++){
