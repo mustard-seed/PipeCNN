@@ -426,6 +426,7 @@ void coreConv(
 
 		bias_ch_out = read_channel_intel(bias_ch);
 
+        // Initialize all shift-registers to 0.
 		#pragma unroll
 		for(unsigned char ll=0; ll<LANE_NUM; ll++){
 
@@ -444,6 +445,7 @@ void coreConv(
 			mac_data = read_channel_intel(data_ch);
 			mac_weight = read_channel_intel(weight_ch);
 
+            // LANE_NUM is in fact the number of CUs
 			// add results from all lanes
 			#pragma unroll
 			for(unsigned char ll=0; ll<LANE_NUM; ll++){
@@ -456,6 +458,7 @@ void coreConv(
 					accum_piped[ll][p] = MASK_ACCUM & accum_piped[ll][p-1];
 				}
 
+                //Store the temporary result in Reg[0]
 				accum_piped[ll][0] = MASK_ACCUM & lane_accum[ll];
 
 				#ifdef DEBUG_CONV
@@ -664,7 +667,7 @@ void maxPool(
 	DPTYPE  pool_final[2][POOL_GP_SIZE_X][LANE_NUM]; // final pooling reslut
 
 	// init hierarchy counters
-	pool_y_cnt = 0;
+    pool_y_cnt = 0;
 	pool_group_cnt = 0;
 	#pragma ivdep array(pool_final)
 	for(ushort i = 0; i < pool_times; i++){

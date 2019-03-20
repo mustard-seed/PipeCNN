@@ -125,10 +125,11 @@ endif()
 #######################################
 ##Add extra library for the host below
 ######################################
-#find_package (OpenCV 4.1.0 REQUIRED EXACT PATHS /home/jamesliu/arm_opencv/Build)
+set (OpenCV_DIR /home/jamesliu/arm_opencv/Build CACHE STRING "Path of OpenCV")
+find_package (OpenCV 3.2.0 REQUIRED EXACT)
 
-#include_directories(${OpenCV_INCLUDE_DIRS})
-
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_definitions(-DUSE_OPENCV)
 #####################################
 ##Add unit test for the host library below
 #####################################
@@ -143,7 +144,7 @@ target_link_libraries(${PROJECT_NAME}_host
 target_link_libraries(${PROJECT_NAME}_host
          rt
          pthread
- #       ${OpenCV_LIBS}
+        ${OpenCV_LIBS}
     )
 
 
