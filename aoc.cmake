@@ -1,5 +1,7 @@
 # Functions used to generate the hardware targets
 
+include (CMakeParseArguments)
+
 function(add_hw_emulation_target)
     set (options )
     set (oneValueArgs TARGET_NAME HEADER_DIR RTL_DIR RTL_LIB)
@@ -26,7 +28,7 @@ function(add_hw_emulation_target)
     
     add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
-        DEPENDS add_hw_emulation_target_SOURCES_LIST
+#        DEPENDS add_hw_emulation_target_SOURCES_LIST
     )
     
 endfunction()
@@ -58,7 +60,7 @@ function(add_hw_report_target)
     
     add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
-        DEPENDS add_hw_report_target_SOURCES_LIST
+#        DEPENDS add_hw_report_target_SOURCES_LIST
     )
     
 endfunction()
@@ -90,7 +92,7 @@ function(add_hw_profile_target)
     
     add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
-        DEPENDS add_hw_profile_target_SOURCES_LIST
+#        DEPENDS add_hw_profile_target_SOURCES_LIST
     )
     
 endfunction()
@@ -122,7 +124,7 @@ function(add_hw_release_target)
     
     add_custom_target(${target_name_local} ALL
         COMMAND aoc ${occflags}
-        DEPENDS add_hw_release_target_SOURCES_LIST
+#        DEPENDS add_hw_release_target_SOURCES_LIST
     )
     
 endfunction()
