@@ -12,6 +12,10 @@ else()
     message(FATAL_ERROR "The environment variable INTELFPGAOCLSDKROOT isn't set.")
 endif()
 
+set (PREPROCESSOR_DEFS 
+    -DDUMMY
+)
+
 #########################
 #Obtain the host source files
 #########################
@@ -33,41 +37,12 @@ include_directories(
 )
 
 ##################################
-#Add the Altera Library to link with
-##################################
-#list (APPEND intel_fpga_libraries
-#    libacl_emulator_kernel_rt.so
-#    libalteracl.so
-#    libalterahalmmd.so
-#    libelf.so
-#    libOpenCL.so
-#    )
-
-#if ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
-#    message (STATUS "Adding additional Altera libraries for the x86-64 host program.")
-#    list (APPEND intel_fpga_libraries
-#        libz.so
-#        libzmq.so
-#        libaoc_cosim_msim.so
-#        libaoc_cosim_mmd.so
-#        libaltera_mpir.so
-#        libaltera_mpfr.so)
-#elseif ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "arm")
-#    message (STATUS "Adding additional Altera libraries for the ARM host program.")
-#    list (APPEND intel_fpga_libraries
-#        libc_accel_runtime.so
-#        )
-#else()
-#    message (ERROR "CMAKE_SYSTEM_PROCESSOR isn't correct!")
-#endif()
-
-##################################
 #Add the RTL directories and libraries
 ##################################
 set (rtl_directory ${CMAKE_CURRENT_SOURCE_DIR}/project/device/RTL
 )
 
-set (rtl_lib rtl_lib.aoclib)
+set (rtl_lib -l rtl_lib.aoclib)
 INCLUDE_DIRECTORIES (${rtl_directory})
 ###########################################################
 #Intel FPGA OpenCL SDK Compile and linkage configurations
@@ -83,43 +58,23 @@ if (BOARD_NAME MATCHES "DE10Standard")
     file (GLOB intelfpga_device_libraries
         $ENV{INTELFPGAOCLSDKROOT}/board/de10_standard/arm32/lib/*.so
         )
-
+    add_definitions(-DC5SOC)
+    list (APPEND PREPROCESSOR_DEFS -DC5SOC)
 elseif (BOARD_NAME MATCHES "A10REF")
     ##Add library directories for a10_ref
+    add_definitions(-DARRIA10)
+    list (APPEND PREPROCESSOR_DEFS -DARRIA10)
     message (STATUS "Linking against A10-Ref libraries")
-    message (STATUS "$ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib")
-    message (STATUS "$ENV{INTELFPGAOCLSDKROOT}/board/a10_ref/linux64/lib")
-    #file (GLOB intelfpga_host_libraries
-    #    $ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib/*.so
-    #    )
-    #list(REMOVE_ITEM intelfpga_host_libraries $ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib/libaoc_cosim_msim32.so)
-    #file (GLOB intelfpga_device_libraries
-    #    $ENV{INTELFPGAOCLSDKROOT}/board/a10_ref/linux64/lib/*.so
-    #    )
 elseif (BOARD_NAME MATCHES "A10PAC")
+    add_definitions(-DARRIA10 -DA10PAC)
     ##Add library directories for a10_pac
+    list (APPEND PREPROCESSOR_DEFS -DARRIA10)
     message (STATUS "Linking against A10-Pac libraries")
-    message (STATUS "$ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib")
-    message (STATUS "$ENV{AOCL_BOARD_PACKAGE_ROOT}/linux64/lib")
-    #file (GLOB intelfpga_host_libraries
-    #    $ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib/*.so
-    #    )
-    #list(REMOVE_ITEM intelfpga_host_libraries $ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib/libaoc_cosim_msim32.so)
-    #file (GLOB intelfpga_device_libraries
-    #    $ENV{AOCL_BOARD_PACKAGE_ROOT}/linux64/lib/*.so
-    #    )
 elseif (BOARD_NAME MATCHES "DE5ANET")
+    add_definitions(-DARRIA10)
     ##Add library directories for de5a_net
+    list (APPEND PREPROCESSOR_DEFS -DARRIA10)
     message (STATUS "Linking against DE5A-NET libraries")
-    message (STATUS "$ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib")
-    message (STATUS "$ENV{INTELFPGAOCLSDKROOT}/board/de5a_net_e1/linux64/lib")
-    #file (GLOB intelfpga_host_libraries
-    #    $ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib/*.so
-    #    )
-    #list(REMOVE_ITEM intelfpga_host_libraries $ENV{INTELFPGAOCLSDKROOT}/host/linux64/lib/libaoc_cosim_msim32.so)
-    #file (GLOB intelfpga_device_libraries
-    #     $ENV{INTELFPGAOCLSDKROOT}/board/de5a_net_e1/linux64/lib/*.so
-    #    )
 else()
     message (STATUS "The board is ${BOARD_NAME}")
     message (FATAL_ERROR "Unsupported board!")
@@ -175,33 +130,60 @@ include (aoc.cmake)
 #)
 list(APPEND kernel_files ${CMAKE_CURRENT_SOURCE_DIR}/project/device/conv_pipe.cl)
 
-add_hw_emulation_target (
+add_aoc_target (
     TARGET_NAME ${PROJECT_NAME} 
+    TARGET_TYPE    EMULATION
     SOURCES_LIST ${kernel_files} 
     HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/host 
     RTL_DIR ${rtl_directory} 
-    RTL_LIB ${rtl_lib})
+    PREPROCESSOR_DEFS_LIST ${PREPROCESSOR_DEFS}
+    RTL_LIB ${rtl_lib}
+    BOARD_NAME ${BOARD_NAME}
+    )
 
-add_hw_report_target (
+add_aoc_target (
     TARGET_NAME ${PROJECT_NAME} 
+    TARGET_TYPE    RTL_ONLY
     SOURCES_LIST ${kernel_files} 
     HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/host 
     RTL_DIR ${rtl_directory} 
-    RTL_LIB ${rtl_lib})
+    PREPROCESSOR_DEFS_LIST ${PREPROCESSOR_DEFS}
+    RTL_LIB ${rtl_lib}
+    BOARD_NAME ${BOARD_NAME}
+    )
 
-add_hw_profile_target (
+add_aoc_target (
     TARGET_NAME ${PROJECT_NAME} 
+    TARGET_TYPE    NORMAL_HW
     SOURCES_LIST ${kernel_files} 
     HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/host 
     RTL_DIR ${rtl_directory} 
-    RTL_LIB ${rtl_lib})
+    PREPROCESSOR_DEFS_LIST ${PREPROCESSOR_DEFS}
+    RTL_LIB ${rtl_lib}
+    BOARD_NAME ${BOARD_NAME}
+    )
 
-add_hw_release_target (
+add_aoc_target (
     TARGET_NAME ${PROJECT_NAME} 
+    TARGET_TYPE    RELEASE_HW
     SOURCES_LIST ${kernel_files} 
     HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/host 
     RTL_DIR ${rtl_directory} 
-    RTL_LIB ${rtl_lib})
+    PREPROCESSOR_DEFS_LIST ${PREPROCESSOR_DEFS}
+    RTL_LIB ${rtl_lib}
+    BOARD_NAME ${BOARD_NAME}
+    )
+
+add_aoc_target (
+    TARGET_NAME ${PROJECT_NAME} 
+    TARGET_TYPE    PROFILE_HW
+    SOURCES_LIST ${kernel_files} 
+    HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/host 
+    RTL_DIR ${rtl_directory} 
+    PREPROCESSOR_DEFS_LIST ${PREPROCESSOR_DEFS}
+    RTL_LIB ${rtl_lib}
+    BOARD_NAME ${BOARD_NAME}
+    )
 
 
 

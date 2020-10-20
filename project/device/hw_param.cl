@@ -35,15 +35,15 @@
 #define _HW_PARAM_H
 
 //choose net
-//#define RESNET
-#define ALEXNET
+#define RESNET
+//#define ALEXNET
 //#define VGG16
 
 
 // Macro architecture parameters
 // General
-#define VEC_SIZE            8              // larger than 4, i.e., 4, 8, 16, ...
-#define LANE_NUM            8           // larger than 1, for alexnet: 2, 3, 4, 8, 12, 15, 16, 22, 28, 32, 34, 48, 50, 51, 64, ...
+#define VEC_SIZE            4              // larger than 4, i.e., 4, 8, 16, ...
+#define LANE_NUM            2           // larger than 1, for alexnet: 2, 3, 4, 8, 12, 15, 16, 22, 28, 32, 34, 48, 50, 51, 64, ...
 #define CHN_DEPTH           0
 //MemRD Kernel
 #define CONV_GP_SIZE_X      7

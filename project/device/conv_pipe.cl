@@ -1093,7 +1093,11 @@ void eltwise(
 #endif
 
 __kernel
+#if defined(C5SOC) //AOC 18.0
+__attribute__((max_work_group_size(LRN_MAX_LOCAL_SIZE))) // (x,y,z)
+#else //AOC 19.x
 __attribute__((max_work_group_size(1,1,LRN_MAX_LOCAL_SIZE))) // (x,y,z)
+#endif
 void lrn(
 			// Params Ports
 			uchar data_dim1,

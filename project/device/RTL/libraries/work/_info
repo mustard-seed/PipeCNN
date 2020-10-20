@@ -1,0 +1,50 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/jamesliu/PipeCNN/project/device/RTL
+vmult_add_fix8bx4
+!s110 1562615602
+!i10b 1
+!s100 7QBlE9GdP[8lhZlec[Toz3
+IhR5I54HFHmDCjfefiiA733
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1553010290
+8mult_add_fix8bx4/ipcore/mult_add_fix8bx4_sim/mult_add_fix8bx4.v
+Fmult_add_fix8bx4/ipcore/mult_add_fix8bx4_sim/mult_add_fix8bx4.v
+L0 17
+Z2 OV;L;10.5b;63
+r1
+!s85 0
+31
+!s108 1562615602.000000
+!s107 mult_add_fix8bx4/ipcore/mult_add_fix8bx4_sim/mult_add_fix8bx4.v|
+!s90 -reportprogress|300|mult_add_fix8bx4/ipcore/mult_add_fix8bx4_sim/mult_add_fix8bx4.v|
+!i113 1
+Z3 tCvgOpt 0
+vtb_c5_mac_8bitx4
+!s110 1562615627
+!i10b 1
+!s100 mY<JIoHPXTno@QRUD:iWj1
+I4M3dN`[]^E=2=NRC:ldEa3
+R1
+R0
+w1562615459
+8c5_mac_8bitx4_tb.v
+Fc5_mac_8bitx4_tb.v
+L0 3
+R2
+r1
+!s85 0
+31
+!s108 1562615627.000000
+!s107 c5_mac_8bitx4_tb.v|
+!s90 -reportprogress|300|c5_mac_8bitx4_tb.v|
+!i113 1
+R3
