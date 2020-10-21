@@ -733,6 +733,7 @@ void maxPool(
 		lane_cnt = 0;
 
 		//#pragma ivdep array(pool_final)
+		#pragma ii 1
 		for(ushort k=0; k<pool_y_bound; k++){
 			flag = pool_win_cnt & 0x01;
 			base_addr = pool_group_cnt*conv_xy + pool_stride*conv_x*pool_y_cnt + pool_stride*pool_win_cnt*POOL_GP_SIZE_X;
@@ -1017,6 +1018,7 @@ void eltwise(
 		}
 	}
 
+	#pragma ii 1
 	for(unsigned int j=0;j<input_num;j++)
 	{
 		#pragma unroll
