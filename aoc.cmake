@@ -49,7 +49,13 @@ function (add_aoc_target)
     if ("${add_aoc_target_HEADER_DIR}" STREQUAL "")
     else()
         list (APPEND occflags -I ${add_aoc_target_HEADER_DIR} )
-    endif()    
+    endif()   
+
+    if ("${add_aoc_target_BOARD_NAME}" MATCHES "DE10Standard")
+        set (FMAX -fmax=100)
+    else ()
+        set (FMAX -fmax=300)
+    endif() 
     
     #Check whether a valid build type is selected
     if ("${add_aoc_target_TARGET_TYPE}" STREQUAL "EMULATION")
@@ -73,12 +79,13 @@ function (add_aoc_target)
             list (APPEND occflags
                     -c
                     -o ${target_name_local}
+                    ${FMAX}
                  )
          else()
              list (APPEND occflags
                      -rtl
      #                -o ${target_name_local}
-                     -fmax=300 
+                     ${FMAX}
                   )
          endif()
     elseif("${add_aoc_target_TARGET_TYPE}" STREQUAL "PROFILE_HW")
@@ -88,7 +95,7 @@ function (add_aoc_target)
                 -profile
                 -high-effort
 #                -o ${target_name_local}
-                -fmax=300 
+                ${FMAX}
                 -seed=7
              )
      elseif("${add_aoc_target_TARGET_TYPE}" STREQUAL "FAST_COMPILE_HW")
@@ -97,7 +104,7 @@ function (add_aoc_target)
          list (APPEND occflags
                  -fast-compile
 #                 -o ${target_name_local}
-                -fmax=300 
+                ${FMAX}
                 -seed=7
               )
     elseif("${add_aoc_target_TARGET_TYPE}" STREQUAL "NORMAL_HW")
@@ -105,7 +112,7 @@ function (add_aoc_target)
         set (target_name_local "${add_aoc_target_TARGET_NAME}_aoc_normal_hw")
         list (APPEND occflags
 #                -o ${target_name_local}
-                -fmax=300 
+                ${FMAX}
                 -seed=7
              )
     elseif("${add_aoc_target_TARGET_TYPE}" STREQUAL "RELEASE_HW")
@@ -114,7 +121,7 @@ function (add_aoc_target)
         list (APPEND occflags 
                 -high-effort
  #               -o ${target_name_local}
-                -fmax=300 
+                ${FMAX}
                 -seed=7
              )
     else()

@@ -140,8 +140,8 @@ void memRead(
 			uchar  win_size_y,
 			uint   win_size_xyz,
 			// Data Ports
-			__global lane_data    *restrict bottom,
-			__global channel_vec  *restrict weights,
+			volatile __global lane_data    *restrict bottom,
+			const __global channel_vec  *restrict weights,
 			__global volatile channel_scal *restrict bias        )
 
 {
@@ -265,8 +265,8 @@ void memRead(
 						item_loop_bound = (weight_dim1x2x3*CONV_GP_SIZE_Y*CONV_GP_SIZE_X/VEC_SIZE);
 				}
 
-				//#pragma ivdep array(win_buffer)
-				//#pragma ivdep array(weight_buffer)
+				#pragma ivdep array(win_buffer)
+				#pragma ivdep array(weight_buffer)
                 //#pragma ivdep
 				for(unsigned int  win_itm_xyz=0; win_itm_xyz<item_loop_bound; win_itm_xyz++){
 				//// The following loops are flattened as the upper loop to improve pipeline efficiency
@@ -575,10 +575,10 @@ void batchNorm(
 				//char  frac_dout,
 				float frac2float,//conv out conver to float
 				float frac2char,//bn out conver to char
-				__global channel_scal_float *restrict mean,
-				__global channel_scal_float *restrict var,
-				__global channel_scal_float *restrict alpha,
-				__global channel_scal_float *restrict beta)
+				const __global channel_scal_float *restrict mean,
+				const __global channel_scal_float *restrict var,
+				const __global channel_scal_float *restrict alpha,
+				const __global channel_scal_float *restrict beta)
 {
 	channel_scal conv_ch_out;
 	channel_scal batchNorm_final;
@@ -678,8 +678,8 @@ void maxPool(
 		ushort   write_back_bound,// pooling window buffer write back result to global memory bound
 		uchar    pool_win_num_x, //the number of pool window buffer
 		uchar    win_size_x, // pool window buffer size of x dimension
-		__global volatile channel_scal * restrict bottom,
-		__global DPTYPE * restrict top
+		volatile __global volatile channel_scal * restrict bottom,
+		volatile __global DPTYPE * restrict top
 		)
 {
 	bool  pool_sync=0; // Receive channel synchronization signal
@@ -881,7 +881,7 @@ void memWrite(
 				uchar  pool_size,
 				uchar  pool_stride,
 				// Data Ports
-				__global DPTYPE *restrict top
+				volatile __global DPTYPE *restrict top
 				)
 {
 	uchar  global_x = get_global_id(0); // max value 256
@@ -988,9 +988,9 @@ void eltwise(
 			float in1_frac,
 			float in2_frac,//conver the input frac to output frac
 			// float out_conver2char,
-			__global lane_data *restrict bottom_1,
-			__global lane_data *restrict bottom_2,
-			__global lane_data *restrict top
+			const __global lane_data *restrict bottom_1,
+			const __global lane_data *restrict bottom_2,
+			volatile __global lane_data *restrict top
 			)
 {
 	lane_data data_out;
@@ -1104,8 +1104,8 @@ void lrn(
 			uchar data_dim2,
 			char  frac_dout,
 			// Data Ports
-			__global lane_data *restrict bottom,
-			__global lane_data *restrict top
+			const __global lane_data *restrict bottom,
+			volatile __global lane_data *restrict top
 		)
 {
 	uchar  global_x = get_global_id(0); // max value 256

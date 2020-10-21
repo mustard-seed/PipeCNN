@@ -387,7 +387,7 @@ int main(int argc, char** argv)
 #if defined(SW_EMU)
     device_ptr = 0; // only use one device, select the proper idx
 #else
-    device_ptr = 1; // only use one device, select the proper idx
+    device_ptr = 0; // only use one device, select the proper idx
 #endif
     num_devices = 1; // reset the num of device to 1
     //for(unsigned device_ptr = 0; device_ptr < num_devices; ++device_ptr) {
@@ -485,7 +485,8 @@ int main(int argc, char** argv)
 
 		// Mems
 		// Create weight and bias buffers for each layer
-		for(unsigned j = 0; j < LAYER_NUM; ++j){
+		for(unsigned j = 0; j < LAYER_NUM; ++j)
+		{
 
 			weight_buf_size = layer_config[j][weight_w]*layer_config[j][weight_h]*layer_config[j][weight_n]*layer_config[j][weight_m];
 #if defined(USE_SDX_1DDR)
@@ -712,7 +713,8 @@ int main(int argc, char** argv)
 
 		// Each iteration excutes one layer convolution
 		// MemRd -> Conv(Relu) -> (MaxPool) -> MemWr -> (Lrn)
-		for(unsigned char j = 0; j < LAYER_NUM; ++j){
+		for(unsigned char j = 0; j < LAYER_NUM; ++j)
+		{
 
 #ifndef USE_OPENCV
 			memWr_time[j] =0;
@@ -732,7 +734,8 @@ int main(int argc, char** argv)
 				iter_num = 1; // for FC layers, process only one time
 
 			// Each iteration process one item in batch
-			for(unsigned k = 0; k < iter_num; ++k){
+			for(unsigned k = 0; k < iter_num; ++k)
+			{
 			// Set Arguments
 #ifdef RESNET
 			unsigned char max_pool;

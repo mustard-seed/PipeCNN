@@ -83,11 +83,11 @@ endif()
 #######################################
 ##Add extra library for the host below
 ######################################
-set (OpenCV_DIR /home/jamesliu/arm_opencv/Build CACHE STRING "Path of OpenCV")
-find_package (OpenCV REQUIRED )
+# set (OpenCV_DIR /home/jamesliu/arm_opencv/Build CACHE STRING "Path of OpenCV")
+# find_package (OpenCV REQUIRED )
 
-include_directories(${OpenCV_INCLUDE_DIRS})
-add_definitions(-DUSE_OPENCV)
+# include_directories(${OpenCV_INCLUDE_DIRS})
+# add_definitions(-DUSE_OPENCV)
 #####################################
 ##Add unit test for the host library below
 #####################################
@@ -113,7 +113,7 @@ endif()
 target_link_libraries(${PROJECT_NAME}_host
          rt
          pthread
-        ${OpenCV_LIBS}
+        # ${OpenCV_LIBS}
     )
 set_target_properties (${PROJECT_NAME}_host PROPERTIES "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS}")
 
